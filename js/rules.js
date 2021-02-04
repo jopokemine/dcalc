@@ -34,10 +34,21 @@ marks are an object like this:
 */
 
 const gpaZones = [
-  [ 75, 100, 4.25 ], [ 71, 74, 4.00 ], [ 67, 70, 3.75 ], [ 64, 66, 3.50 ],
-  [ 61, 63, 3.25 ], [ 57, 60, 3.00 ], [ 54, 56, 2.75 ], [ 50, 53, 2.50 ],
-  [ 48, 48, 2.25 ], [ 43, 47, 2.00 ], [ 40, 42, 1.50 ], [ 38, 38, 1.00 ],
-  [ 35, 37, 0.75 ], [ 30, 34, 0.50 ], [ 0, 28, 0.00 ]
+  [75, 100, 4.25],
+  [71, 74, 4.0],
+  [67, 70, 3.75],
+  [64, 66, 3.5],
+  [61, 63, 3.25],
+  [57, 60, 3.0],
+  [54, 56, 2.75],
+  [50, 53, 2.5],
+  [48, 48, 2.25],
+  [43, 47, 2.0],
+  [40, 42, 1.5],
+  [38, 38, 1.0],
+  [35, 37, 0.75],
+  [30, 34, 0.5],
+  [0, 28, 0.0],
 ];
 
 function prepareMarks(marks) {
@@ -48,14 +59,12 @@ function prepareMarks(marks) {
   marks.prepared.l5.length = 5;
 
   marks.prepared.l6 = marks.l6.slice();
-  marks.prepared.l6.push(
-      marks.fyp); // Add fyp once, as if it was worth 20 credits. This way, 20
-                  // credits of it can be dropped if the project is lowest
+  marks.prepared.l6.push(marks.fyp); // Add fyp once, as if it was worth 20 credits. This way, 20
+  // credits of it can be dropped if the project is lowest
   marks.prepared.l6.sort(reverseNumericalComparison);
   marks.prepared.l6.length = 4;
 
-  marks.prepared.l6.push(
-      marks.fyp); // Add fyp a second time, to make up the 40 credits
+  marks.prepared.l6.push(marks.fyp); // Add fyp a second time, to make up the 40 credits
   marks.prepared.l6.sort(reverseNumericalComparison);
 
   // add GPA
@@ -63,14 +72,15 @@ function prepareMarks(marks) {
   marks.prepared.l6gpa = marks.prepared.l6.map(gradeToGPA);
 }
 
-function reverseNumericalComparison(a, b) { return b - a; }
+function reverseNumericalComparison(a, b) {
+  return b - a;
+}
 
 function gradeToGPA(num) {
-  num = Math.round(num);                 // round up from .5
-  num = (num % 10 == 9 ? num + 1 : num); // round nines up
+  num = Math.round(num); // round up from .5
+  num = num % 10 == 9 ? num + 1 : num; // round nines up
   for (const zone of gpaZones) {
-    if (num >= zone[0] && num <= zone[1])
-      return zone[2];
+    if (num >= zone[0] && num <= zone[1]) return zone[2];
   }
   return -999;
 }
@@ -87,7 +97,9 @@ function ruleA(marks) {
   return roundDown(l5mean * 0.4 + l6mean * 0.6);
 }
 
-function ruleB(marks) { return roundDown(mean(marks.prepared.l6)); }
+function ruleB(marks) {
+  return roundDown(mean(marks.prepared.l6));
+}
 
 function ruleC(marks) {
   const allMarks = marks.prepared.l5.concat(marks.prepared.l6);
@@ -95,25 +107,23 @@ function ruleC(marks) {
   return roundDown(allMarks[allMarks.length / 2]);
 }
 
-function mean(array) { return array.reduce((a, b) => a + b) / array.length; }
+function mean(array) {
+  return array.reduce((a, b) => a + b) / array.length;
+}
 
 function roundDown(num, digits = 2) {
   const str = String(num);
-  const [whole, decimal] = str.split('.');
-  const padded = (decimal || '00').padEnd(digits, '0');
-  return whole + '.' + padded.substring(0, 2);
+  const [whole, decimal] = str.split(".");
+  const padded = (decimal || "00").padEnd(digits, "0");
+  return whole + "." + padded.substring(0, 2);
 }
 
 function toClassification(mark) {
-  if (mark < 40)
-    return 'Failed';
-  if (mark < 50)
-    return 'Third-class honours';
-  if (mark < 60)
-    return 'Second-class honours (lower division)';
-  if (mark < 70)
-    return 'Second-class honours (upper division)';
-  return 'First-class honours';
+  if (mark < 40) return "Failed";
+  if (mark < 50) return "Third-class honours";
+  if (mark < 60) return "Second-class honours (lower division)";
+  if (mark < 70) return "Second-class honours (upper division)";
+  return "First-class honours";
 }
 
 /* for testing
