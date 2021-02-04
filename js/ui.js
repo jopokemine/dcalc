@@ -18,13 +18,14 @@ function init() {
 
   const shareLinkEl = document.querySelector('#shareLink');
   shareLinkEl.addEventListener('click', (e) => e.target.select());
-  
+
   if (query.share) {
     // we are using shared marks, disabling local storage usage and mark editing
     loadSharedMarks(query);
-    document.querySelector('#showingShared').style='';
-    document.querySelector('#share').style='display: none';
-    document.querySelector('#showingShared a').href = window.location.origin + window.location.pathname;
+    document.querySelector('#showingShared').style = '';
+    document.querySelector('#share').style = 'display: none';
+    document.querySelector('#showingShared a').href =
+        window.location.origin + window.location.pathname;
   } else {
     loadSavedMarks();
     createShareLink(); // must be done after loading saved marks
@@ -59,7 +60,8 @@ function createShareLink() {
   const allInputs = document.querySelectorAll('.module input');
   for (const input of allInputs) {
     if (input.value) {
-      link += `&${encodeURIComponent(input.id)}=${encodeURIComponent(input.value)}`;
+      link +=
+          `&${encodeURIComponent(input.id)}=${encodeURIComponent(input.value)}`;
     }
   }
 
@@ -79,8 +81,8 @@ function loadSharedMarks(query) {
 function save(e) {
   if (e.target.validity.valid) {
     const input = e.target;
-    localStorage[input.id] = input.value;  
-  } 
+    localStorage[input.id] = input.value;
+  }
 }
 
 function loadSavedMarks() {
@@ -99,7 +101,8 @@ function recalculate() {
     document.querySelector('#ruleA').textContent = 'n/a';
     document.querySelector('#ruleB').textContent = 'n/a';
     document.querySelector('#ruleC').textContent = 'n/a';
-    document.querySelector('#finalClassification').textContent = 'not enough data';
+    document.querySelector('#finalClassification').textContent =
+        'not enough data';
     return;
   }
 
@@ -109,30 +112,32 @@ function recalculate() {
 
   const a = (usingMeng) ? ruleAMeng(marks) : ruleA(marks);
   const b = (usingMeng) ? ruleBMeng(marks) : ruleB(marks);
-  const c = (usingMeng) ? 0 : ruleC(marks); // There is no 'Rule C' for an Integrated Masters
+  const c =
+      (usingMeng)
+          ? 0
+          : ruleC(marks); // There is no 'Rule C' for an Integrated Masters
 
   document.querySelector('#ruleA').textContent = a;
   document.querySelector('#ruleB').textContent = b;
   document.querySelector('#ruleC').textContent = c;
 
-  const finalMark = Math.max(a,b,c);
-  const finalClassification = (usingMeng) ? toClassificationMeng(finalMark) : toClassification(finalMark);
+  const finalMark = Math.max(a, b, c);
+  const finalClassification = (usingMeng) ? toClassificationMeng(finalMark)
+                                          : toClassification(finalMark);
 
-  document.querySelector('#finalClassification').textContent = finalClassification;
+  document.querySelector('#finalClassification').textContent =
+      finalClassification;
 
   document.querySelector('#gpa').textContent = (usingMeng) ? 'n/a' : gpa(marks);
 }
 
 function gatherMarksFromPage() {
   const retval = {
-    l5: [],
-    l6: [],
-    l7: {
-      credits30: [],
-      credits15: []
-    },
-    fyp: null,
-    gip: null,
+    l5 : [],
+    l6 : [],
+    l7 : {credits30 : [], credits15 : []},
+    fyp : null,
+    gip : null,
   };
 
   const l5Inputs = document.querySelectorAll('#l5 input[type="number"]');
@@ -148,7 +153,8 @@ function gatherMarksFromPage() {
     console.error('we do not have enough l5 inputs!');
   }
 
-  const l6Inputs = document.querySelectorAll('#l6 input:not(#fyp)[type="number"]');
+  const l6Inputs =
+      document.querySelectorAll('#l6 input:not(#fyp)[type="number"]');
   for (const input of l6Inputs) {
     if (input.value === '') {
       console.log('no data', input);
@@ -168,7 +174,8 @@ function gatherMarksFromPage() {
   }
   retval.fyp = Number(fypInput.value);
 
-  const l7Inputs = document.querySelectorAll('#l7:not(.hidden) input:not(#gip)[type="number"]');
+  const l7Inputs = document.querySelectorAll(
+      '#l7:not(.hidden) input:not(#gip)[type="number"]');
   if (l7Inputs.length) {
     for (const input of l7Inputs) {
       if (input.value === '') {
@@ -188,10 +195,10 @@ function gatherMarksFromPage() {
     }
   } else {
     retval.l7 = {
-      credits15: [],
-      credits30: [],
+      credits15 : [],
+      credits30 : [],
     }
-  }  
+  }
 
   const gipInput = document.querySelector('#l7:not(.hidden) #gip');
   if (gipInput) {
@@ -214,7 +221,7 @@ function parseQueryParams() {
   /* parse the query */
   const params = search.replace(/;/g, '&').split('&');
   let q = {};
-  for (let i=0; i<params.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     const t = params[i].split('=', 2);
     const name = decodeURIComponent(t[0]);
     if (!q[name]) {
@@ -229,7 +236,7 @@ function parseQueryParams() {
   return q;
 }
 
-function copyToClipboard () {
+function copyToClipboard() {
   const sl = document.querySelector("#shareLink");
   sl.select();
   document.execCommand('copy');
